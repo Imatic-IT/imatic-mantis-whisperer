@@ -29,7 +29,11 @@ public function config(): array
             'description' => false,
             'additional_information' => false,
         ],
-        'submitOnSelect' => true,
+        'submitOnSelect' => [
+            'enter' => true,
+            'click' => true,
+            'auto_submit_insterted_issue' => true,
+        ],
     ];
 }
 ```
@@ -44,8 +48,10 @@ public function config(): array
   - id: If set to `true`, the plugin will search for issues by their unique identifier.
   - description: If set to `true`, the plugin will search within the issue descriptions.
   - additional_information: If set to `true`, the plugin will also include any additional information fields in the search criteria.
-- submitOnSelect: If set to true, allows immediate form submission upon selecting an issue.
-
+- submitOnSelect: An object that defines submission behavior when selecting or inserting issues:
+  - enter: If true, pressing Enter on a selected issue will submit the form.
+  - click: If true, clicking on a selected issue will submit the form.
+  - auto_submit_insterted_issue: If true, inserting an exact 7-digit issue number (e.g., 0000422) will automatically trigger form submission without opening the search overlay.
 ## Additional Features
 
 - **Search by Issue Number**: The plugin allows users to search for issues not only by their summary but also by their unique issue number. This includes support for formats with leading zeros, ensuring that all relevant issues can be easily found.
