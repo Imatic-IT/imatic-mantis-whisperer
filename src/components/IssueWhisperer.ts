@@ -15,6 +15,11 @@ const settingsSchema = z.object({
   searchForIssueMessage: z.string(),
   searchInputNames: z.array(z.string()),
   fieldSeparator: z.string(),
+  submitOnSelect: z.object({
+    enter: z.boolean(),
+    click: z.boolean(),
+    auto_submit_insterted_issue: z.boolean(),
+  }),
 });
 
 type settingsModel = z.infer<typeof settingsSchema>;
@@ -86,24 +91,38 @@ export class IssueWhisperer {
   }
 
   private handleInput = async (event: Event) => {
-    this.controller.showOverlay();
+
     const value: string = (event.target as HTMLInputElement).value.trim();
+
     if (!value) {
       this.controller.hideOverlay();
       return;
     }
+
+    if(
+        /^[0-9]{7}$/.test(value) &&
+        this.settings.submitOnSelect.auto_submit_insterted_issue
+    )
+    {
+      this.controller.hideOverlay();
+      this.controller.submitFormWithActiveInput();
+      return
+    }
+
+    this.controller.showOverlay();
 
     const searchInput: HTMLInputElement = document.querySelector(
       `.${CSS_CLASSES.issueSearchInput}`
     ) as HTMLInputElement;
     searchInput.value = value;
 
-    if (value.length < this.settings.minSearchLength) {
-      this.renderMinLengthMessage();
-    } else {
+      if (value.length < this.settings.minSearchLength) {
+          this.renderMinLengthMessage();
+          return;
+      }
+
       const issues = await this.issue.searchIssues(value);
       this.renderer.renderIssues(issues);
-    }
   };
 
   private renderMinLengthMessage(): void {

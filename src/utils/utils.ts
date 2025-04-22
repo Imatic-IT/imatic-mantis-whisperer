@@ -1,7 +1,7 @@
 export function getSettings(): string {
   const el = document.querySelector<HTMLInputElement>('#imaticWhisperer')!;
 
-  const data = el.dataset.data; // dataset môže byť undefined
+  const data = el.dataset.data;
   if (!data) {
     throw new Error('Missing data attribute on #imaticWhisperer element');
   }

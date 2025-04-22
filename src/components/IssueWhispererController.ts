@@ -3,7 +3,10 @@ import { z } from 'zod';
 import { CSS_CLASSES } from './constatns';
 
 const settingsSchema = z.object({
-  submitOnSelect: z.boolean(),
+  submitOnSelect: z.object({
+    enter: z.boolean(),
+    click: z.boolean(),
+  }),
   searchInputNames: z.array(z.string()),
 });
 
@@ -137,7 +140,11 @@ export class IssueWhispererController {
         ) as HTMLButtonElement;
         const issueId = issueIdButton.getAttribute('data-id')!;
         this.setIssueIdIntoInput(issueId);
-        if (this.settings.submitOnSelect) this.submitFormWithActiveInput();
+
+        if (this.settings.submitOnSelect.enter){
+          this.submitFormWithActiveInput();
+        }
+
         this.hideOverlay();
         this.activeInputElement.focus();
       }
@@ -169,6 +176,10 @@ export class IssueWhispererController {
     const issueId: string = this.getIssueIdFromElement(button);
     this.setIssueIdIntoInput(issueId);
     this.hideOverlay();
+
+    if (this.settings.submitOnSelect.click){
+      this.submitFormWithActiveInput();
+    }
   }
 
   private setIssueIdIntoInput(issueId: string): boolean {
@@ -179,9 +190,7 @@ export class IssueWhispererController {
     return false;
   }
 
-  private submitFormWithActiveInput(): void {
-    if (!this.settings.submitOnSelect) return;
-
+   submitFormWithActiveInput(): void {
     const form: HTMLFormElement = this.activeInputElement.closest('form')!;
     if (form) {
       form.submit();

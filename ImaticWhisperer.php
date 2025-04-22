@@ -6,7 +6,7 @@ class ImaticWhispererPlugin extends MantisPlugin
     {
         $this->name = 'Imatic whisperer';
         $this->description = 'This plugin provides autocomplete for issue id in MantisBT.';
-        $this->version = '0.1.1';
+        $this->version = '0.1.2';
         $this->requires = [
             'MantisCore' => '2.0.0',
         ];
@@ -37,7 +37,11 @@ class ImaticWhispererPlugin extends MantisPlugin
                 'description' => false,
                 'additional_information' => false,
             ],
-            'submitOnSelect' => true,
+            'submitOnSelect' => [
+                'enter' => true,
+                'click' => true,
+                'auto_submit_insterted_issue' => true,
+            ]
         ];
     }
 
